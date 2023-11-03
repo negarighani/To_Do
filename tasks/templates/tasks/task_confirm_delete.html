@@ -1,0 +1,84 @@
+{% extends 'base_menu2.html' %}
+{% load rest_framework %}
+{% block title %} Task Manager - Delete {% endblock %}
+{% block content %}
+<br/>
+<div class="p-3" style="border-radius:10px !important; background-color:#f8f9f9; ">
+  {% csrf_token %}
+  <h4 class="">Are you sure you want to delete the task:</h4>
+  <br/>
+  <table class="table table-striped">
+    <tbody>
+        <th>Title</th>
+        <td>{{ task.title }} </td>
+      </tr>
+      <tr>
+        <th>Description</th>
+        <td>
+          {{ task.description }}
+        </td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td>{{task.get_status_display}}</td>
+      </tr>
+      <tr>
+        <th>Priority</th>
+        <td>{{task.get_priority_display}}</td>
+      </tr>
+      <tr>
+        <th>Owner</th>
+        <td>{{ task.owner.username }}</td>
+      </tr>
+      <tr>
+        <th>Due Date</th>
+        <td>{{ task.due_date | date:"F d, Y" }}</td>
+      </tr>
+      <tr>
+        <th>Created at</th>
+        <td>{{ task.created_at | date:"F d, Y" }}</td>
+      </tr>
+      <tr>
+        <th>Updated at</th>
+        <td>{{ task.updated_at | date:"F d, Y" }}</td>
+      </tr>
+      
+    </tbody>
+  </table>
+  <div class="text-center align-items-center justify-content-center d-flex">
+    
+    </div>
+    <div class="text-center align-items-center justify-content-center d-flex">
+      <button class="btn btn-sm btn-danger d-inline mx-2"type="submit" name="delete" id="delete-button" href="{% url 'tasks:task-delete' task.id %}"><i class="fa fa-trash"></i> Delete</button>
+      <a href="{% url 'tasks:task-list' %}" class="btn btn-sm btn-secondary d-inline mx-2"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i> Cancel</a>
+    </div>
+<br/>
+</div>
+<script>
+  $(document).ready(function() {
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+        xhr.setRequestHeader('X-CSRFToken', csrftoken);
+      }
+    });
+    $("#delete-button").click(function(e) {
+      e.preventDefault();
+
+      var href = $(this).attr("href");
+
+      $.ajax({
+        url: href,
+        method: "DELETE",
+        success: function() {
+          alert("Task deleted successfully!");
+          window.location.href = "{% url 'tasks:task-list' %}";
+        },
+        error: function() {
+          alert("An error occurred while deleting the task.");
+        }
+      });
+    });
+  });
+</script>  
+{% endblock content %}

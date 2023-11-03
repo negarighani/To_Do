@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %} Task Manager - Login {% endblock %}
+{% block content %}
+<form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+
+<div class="container">
+    <div class="row">
+      <div class="col-md-4 offset-md-4">
+        <div class="card">
+          <div class="card-header" style="border-radius:10px !important; background-color: #d1d3d4;">
+            <h3 class="card-title d-flex h-100 align-items-center justify-content-center" ><span class="text-white">Login</h3>
+          </div>
+          <div class="card-body">
+            <form action="/login/" method="post">
+                {% csrf_token %}
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" id="username" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-control">
+              </div>
+              <div class="align-items-center justify-content-center d-flex">
+                <input type="submit" class="btn btn-secondary " value="Login" />
+                <input type="hidden" name="next" value="{{ next }}" />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  {% if form.errors %}
+  <div class="d-flex h-100 align-items-center justify-content-center">
+  <p p class="text-danger">Your username and password didn't match. Please try again.</p>
+  </div>
+{% endif %}
+{% endblock %} 
+
+
+

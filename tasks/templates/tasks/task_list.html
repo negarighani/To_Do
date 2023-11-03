@@ -1,0 +1,64 @@
+{% extends 'base_menu.html' %}
+
+{% block title %} Task Manager - List {% endblock %}
+{% block content %}
+{% if strval%}
+<br>
+<h6>Search result for <span class="text-decoration-underline">{{strval}}</span>:</h6>
+{% endif%}
+{% if tasks %}
+<br/>
+<h6 class="">Tasks List:</h6>
+<div class="card rounded border border-dark-subtle">
+  <div class="custom-div"style="height: 550px; overflow-y: auto;">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Priority</th>
+          <th>Owner</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+          <tr>
+            <td>{{ task.title }}</td>
+            <td>{{ task.get_status_display }}</td>
+            <td id ='priority'class="table-hover tbody tr td:nth-child(3)">{{ task.get_priority_display }}</td>
+            <td>{{ task.owner }}</td>
+            <td>
+              <a href="{% url 'tasks:task-detail' task.id %}" class="btn btn-sm btn-warning"> <i class="fa-solid fa-circle-info" style="color: #ffffff;"></i></a>
+              {% if task.owner == user %}
+                <a href="{% url 'tasks:task-edit' task.id %}"  class="btn btn-sm btn-success"><i class="fa fa-pencil"></i></a>
+                <a href="{% url 'tasks:task-delete' task.id %}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<br/>
+  <h5>Currently, there is no task to show.</h5>
+{% endif %}
+<script>
+  $(document).ready(function() {
+    var priorityCells = $('.table-hover tbody tr td:nth-child(3)');
+    priorityCells.each(function() {
+      var taskPriority = $(this).text();
+      if (taskPriority === 'High Priority') {
+        $(this).addClass('text-danger');
+      } else if (taskPriority === 'Medium Priority') {
+        $(this).addClass('text-warning');
+      } else {
+        $(this).addClass('text-success');
+      }
+    });
+  });
+  </script>
+  
+{% endblock content %}

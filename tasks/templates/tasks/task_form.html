@@ -1,0 +1,75 @@
+{% extends 'base_menu2.html' %}
+{% block title %} Task Manager - Edit {% endblock %}
+{% block content %}
+<br/>
+<div class="p-3" style="border-radius:10px !important; background-color:#f8f9f9; ">
+    <form class="-0auto" action="/tasks/{{task.id}}/edit" method="post">
+        {% csrf_token %}
+        <h4 class="">Task Detail:</h4>
+        <br/>
+        <table class="table table-striped">
+            <tbody>
+                <input type="hidden" name="id" value="{{ task.id }}">
+            <tr>
+                <th>Title</th>
+                <td><input class="form-control" type="text" name="title" value="{{ task.title }}"required> </td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>
+                    <textarea name="description" class="form-control" required>{{ task.description }}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>
+
+                    <select class="form-control" name="status"required>
+                        {% for status,status_display in task_statuses %}
+                            <option  value="{{ status }}" {% if task.status == status %} selected {% endif %}>{{ status_display}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Priority</th>
+                <td>
+
+                    <select class="form-control" name="priority"required>
+                        {% for priority,priority_display in task_priorities %}
+                            <option  value="{{ priority }}" {% if task.priority == priority %} selected {% endif %}>{{ priority_display}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Due Date</th>
+                <td> 
+                <input name="due_date" class="form-control" type="date" value="{{task.due_date | date:"Y-m-d"}}">
+                </td> 
+            </tr>
+            <tr>
+                <th>Owner</th>
+                <td>{{ task.owner.username }}</td>
+                </tr>
+            <tr>
+                <th>Created at</th>
+                <td>{{ task.created_at | date:"F d, Y" }}</td>
+            </tr>
+            <tr>
+                <th>Updated at</th>
+                <td>{{ task.updated_at | date:"F d, Y" }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center  align-items-center justify-content-center d-flex">
+        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-pencil"></i> Update </button> 
+        </div>
+    </form>
+    {% if serializer_error %}
+    <div class="d-flex h-100 align-items-center justify-content-center">
+    <p p class="text-danger">{{error}}</p>
+    </div>
+  {% endif %} 
+</div>
+{% endblock content %}
