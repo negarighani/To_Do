@@ -36,7 +36,7 @@ def task_detail(request, pk):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        if not is_authorized:
+        if not is_authorized(request,task):
             return Response({'message': 'You are not authorized to perform this action.'}, status=status.HTTP_403_FORBIDDEN)
         serializer = TaskSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
@@ -45,7 +45,7 @@ def task_detail(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        if not is_authorized:
+        if not is_authorized(request,task):
             return Response({'message': 'You are not authorized to perform this action.'}, status=status.HTTP_403_FORBIDDEN)
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

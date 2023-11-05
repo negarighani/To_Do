@@ -49,7 +49,7 @@ class TaskListViewTest(APITestCase):
 class TaskDetailViewTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-
+        
         self.task_data = {
             'title': 'Test Task',
             'description': 'This is a test task',

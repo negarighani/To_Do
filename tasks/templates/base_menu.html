@@ -7,7 +7,7 @@
     <nav class="navbar bg-body-tertiary">
       <div class="container-fluid">
         <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search"placeholder="Topic/Description" name="search" aria-label="Search" {% if search %} value="{{ search }}" {% endif %}>
+          <input class="form-control me-2" type="search"placeholder="Topic/Description" name="search" aria-label="Search" {% if strval %} value="{{ strval }}" {% endif %}>
           <button class="btn  btn-outline-secondary m-1" type="submit"><i class="fa fa-magnifying-glass"style="color: #595959;"></i></button>
           <a href="{% url 'tasks:task-list'%}"class="btn  btn-outline-secondary m-1 "><i class="fa-solid fa-rotate-left" style="color: #595959;"></i></a>
         </form> 

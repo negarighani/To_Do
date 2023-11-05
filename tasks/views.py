@@ -9,7 +9,6 @@ from tasks.serializers import CommentSerializer, TaskSerializer, TaskSerializerW
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
 from tasks.owner import  OwnerDeleteView, OwnerUpdateView, OwnerView, OwnerDetailView, OwnerCreate, OwnerList
 from django.db.models import Q
 from tasks.utils import get_authorization_error_context, get_task_object, is_authorized
@@ -87,11 +86,8 @@ class TaskDelete(OwnerView):
     
     def get(self, request, pk):
         task=get_task_object(pk)
-        if request.user != task.owner:
-            context= {
-                'error':'You are not authorized to perform this action. Please click on Task Manager to get back to home page.'
-            }
-        else:
+        context= get_authorization_error_context(request, task)
+        if context is None:
             context = {
                 'task': task,
             }
@@ -99,10 +95,8 @@ class TaskDelete(OwnerView):
     
     def delete(self, request, pk):
         task = get_task_object(pk)
-        if request.user != task.owner:
-            context= {
-                'error':'You are not authorized to perform this action. Please click on Task Manager to get back to home page.'
-            }
+        context= get_authorization_error_context(request, task)
+        if not context is None:
             return Response(context)
         else:
             task.delete()
@@ -171,7 +165,7 @@ class CommentDeleteView(OwnerDeleteView):
     def delete(self, request, pk):
         try:
             comment = Comment.objects.get(pk=pk)
-            if  is_authorized:
+            if  request.user == comment.writer:
                 comment.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             else:
